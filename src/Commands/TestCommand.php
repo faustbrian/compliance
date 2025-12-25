@@ -22,7 +22,7 @@ final class TestCommand extends Command
             ->setName('test')
             ->setDescription('Run compliance tests')
             ->addOption('ci', null, InputOption::VALUE_NONE, 'Use CI-friendly output (no Termwind)')
-            ->addOption('verbose', 'v', InputOption::VALUE_NONE, 'Show detailed failure information')
+            ->addOption('failures', null, InputOption::VALUE_NONE, 'Show detailed failure information')
             ->addOption('draft', null, InputOption::VALUE_REQUIRED, 'Run tests for specific draft only');
     }
 
@@ -60,13 +60,13 @@ final class TestCommand extends Command
         }
 
         $useCi = $input->getOption('ci') !== false;
-        $verbose = $input->getOption('verbose') !== false;
+        $showFailures = $input->getOption('failures') !== false;
 
         if ($useCi) {
             $renderer = new CiRenderer($output);
             $renderer->render($suites);
 
-            if ($verbose) {
+            if ($showFailures) {
                 foreach ($suites as $suite) {
                     $renderer->renderFailures($suite);
                 }
@@ -75,7 +75,7 @@ final class TestCommand extends Command
             $summaryRenderer = new SummaryRenderer();
             $summaryRenderer->render($suites);
 
-            if ($verbose) {
+            if ($showFailures) {
                 $detailRenderer = new DetailRenderer();
 
                 foreach ($suites as $suite) {

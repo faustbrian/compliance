@@ -17,7 +17,7 @@ final readonly class SummaryRenderer
     {
         render(<<<'HTML'
             <div class="my-1">
-                <div class="px-2 py-1 bg-blue-600">
+                <div class="px-2 py-1 bg-blue">
                     <span class="font-bold text-white">Compliance Test Suite</span>
                 </div>
             </div>
@@ -36,14 +36,19 @@ final readonly class SummaryRenderer
     {
         $status = $suite->failedTests() === 0 ? '✓' : '✗';
         $statusColor = $suite->failedTests() === 0 ? 'text-green' : 'text-red';
+        $passRateColor = match (true) {
+            $suite->passRate() === 100.0 => 'text-green',
+            $suite->passRate() >= 95.0 => 'text-yellow',
+            default => 'text-red',
+        };
 
         render(sprintf(
             <<<'HTML'
                 <div class="mx-2">
                     <span class="%s font-bold">%s</span>
-                    <span class="ml-1">%-20s</span>
-                    <span class="ml-2 text-gray">%4d/%4d tests</span>
-                    <span class="ml-2 text-gray">(%.1f%%)</span>
+                    <span class="ml-1 text-white font-bold">%-20s</span>
+                    <span class="ml-2 text-cyan">%4d</span><span class="text-gray">/</span><span class="text-white">%4d tests</span>
+                    <span class="ml-2 %s font-bold">(%.1f%%)</span>
                 </div>
             HTML,
             $statusColor,
@@ -51,6 +56,7 @@ final readonly class SummaryRenderer
             $suite->name.':',
             $suite->passedTests(),
             $suite->totalTests(),
+            $passRateColor,
             $suite->passRate(),
         ));
     }
@@ -69,7 +75,7 @@ final readonly class SummaryRenderer
 
         if ($allPassed) {
             render(<<<'HTML'
-                <div class="mx-2 px-2 py-1 bg-green-600">
+                <div class="mx-2 px-2 py-1 bg-green">
                     <span class="font-bold text-white">🎉 ALL TESTS PASSED - 100% COMPLIANCE</span>
                 </div>
             HTML);
@@ -77,12 +83,12 @@ final readonly class SummaryRenderer
             render(sprintf(
                 <<<'HTML'
                     <div class="mx-2">
-                        <div class="text-yellow font-bold">Some tests failed. See details above.</div>
-                        <div class="mt-1 text-gray">
-                            <div>Total:    %d tests</div>
-                            <div>Passed:   %d tests</div>
-                            <div>Failed:   %d tests</div>
-                            <div>Duration: %.2fs</div>
+                        <div class="text-yellow font-bold">Some tests failed.</div>
+                        <div class="mt-1">
+                            <div><span class="text-gray">Total:   </span> <span class="text-white">%d tests</span></div>
+                            <div><span class="text-gray">Passed:  </span> <span class="text-green">%d tests</span></div>
+                            <div><span class="text-gray">Failed:  </span> <span class="text-red">%d tests</span></div>
+                            <div><span class="text-gray">Duration:</span> <span class="text-cyan">%.2fs</span></div>
                         </div>
                     </div>
                 HTML,

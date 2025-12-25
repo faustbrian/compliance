@@ -38,4 +38,11 @@ interface ComplianceTestInterface
      * @return array<int, string>
      */
     public function getTestFilePatterns(): array;
+
+    /**
+     * Decode JSON string preserving type distinctions (e.g., {} vs []).
+     *
+     * @return mixed
+     */
+    public function decodeJson(string $json): mixed;
 }

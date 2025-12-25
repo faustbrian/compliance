@@ -73,7 +73,7 @@ final readonly class ComplianceRunner
             return [];
         }
 
-        $testGroups = json_decode($fileContents, true, 512, JSON_THROW_ON_ERROR);
+        $testGroups = $compliance->decodeJson($fileContents);
 
         if (! is_array($testGroups)) {
             return [];

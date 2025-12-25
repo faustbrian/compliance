@@ -22,7 +22,7 @@ final readonly class DetailRenderer
         render(sprintf(
             <<<'HTML'
                 <div class="my-1">
-                    <div class="px-2 py-1 bg-red-600">
+                    <div class="px-2 py-1 bg-red">
                         <span class="font-bold text-white">%s - Failures (%d)</span>
                     </div>
                 </div>
