@@ -15,8 +15,6 @@ final readonly class SummaryRenderer
      */
     public function render(array $suites): void
     {
-        render('<div class="my-1"></div>');
-
         foreach ($suites as $suite) {
             $this->renderSuite($suite);
         }
@@ -34,14 +32,15 @@ final readonly class SummaryRenderer
 
         // Calculate dots for alignment (Laravel RouteListCommand style)
         $label = $suite->name;
-        $labelWidth = 20;
-        $dotsNeeded = max(1, $labelWidth - mb_strlen($label));
-        $dots = ' '.str_repeat('.', $dotsNeeded);
+        $stats = sprintf('%d/%d tests', $suite->passedTests(), $suite->totalTests());
+        $totalWidth = 60;
+        $dotsNeeded = max(1, $totalWidth - mb_strlen($label) - mb_strlen($stats) - 1);
+        $dots = str_repeat('.', $dotsNeeded);
 
         render(sprintf(
             <<<'HTML'
                 <div class="mx-2">
-                    <span class="text-white font-bold">%s</span><span class="text-gray">%s</span>
+                    <span class="text-white font-bold">%s</span> <span class="text-gray">%s</span>
                     <span class="ml-1 text-cyan">%4d</span><span class="text-gray">/</span><span class="text-white">%-4d tests</span>
                     <span class="ml-1 %s font-bold">(%.1f%%)</span>
                 </div>
