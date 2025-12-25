@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+// When running via composer's bin wrapper, use the global autoloader path
+if (isset($GLOBALS['_composer_autoload_path'])) {
+    require $GLOBALS['_composer_autoload_path'];
+} else {
+    // Fallback: Load autoloader from various possible locations
+    $autoloaderPaths = [
+        __DIR__.'/../../../autoload.php',      // Installed in vendor
+        __DIR__.'/../vendor/autoload.php',     // Running from package root
+    ];
+
+    foreach ($autoloaderPaths as $file) {
+        if (file_exists($file)) {
+            require $file;
+            break;
+        }
+    }
+}
+
+use Cline\Compliance\Application;
+
+// Create and run the application
+$application = new Application();
+$application->run();
