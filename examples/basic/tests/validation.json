@@ -1,0 +1,127 @@
+[
+  {
+    "description": "User validation",
+    "schema": {
+      "required": ["name", "email", "age"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "age": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 150
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "tests": [
+      {
+        "description": "valid user with all fields",
+        "data": {
+          "name": "John Doe",
+          "email": "john@example.com",
+          "age": 30,
+          "active": true
+        },
+        "valid": true,
+        "tags": ["happy-path"]
+      },
+      {
+        "description": "valid user without optional fields",
+        "data": {
+          "name": "Jane Doe",
+          "email": "jane@example.com",
+          "age": 25
+        },
+        "valid": true,
+        "tags": ["happy-path"]
+      },
+      {
+        "description": "missing required field name",
+        "data": {
+          "email": "test@example.com",
+          "age": 20
+        },
+        "valid": false,
+        "tags": ["validation-error"]
+      },
+      {
+        "description": "missing required field email",
+        "data": {
+          "name": "Test User",
+          "age": 20
+        },
+        "valid": false,
+        "tags": ["validation-error"]
+      },
+      {
+        "description": "invalid email format",
+        "data": {
+          "name": "Test User",
+          "email": "not-an-email",
+          "age": 20
+        },
+        "valid": false,
+        "tags": ["validation-error", "format"]
+      },
+      {
+        "description": "age below minimum",
+        "data": {
+          "name": "Test User",
+          "email": "test@example.com",
+          "age": -1
+        },
+        "valid": false,
+        "tags": ["validation-error", "range"]
+      },
+      {
+        "description": "age above maximum",
+        "data": {
+          "name": "Test User",
+          "email": "test@example.com",
+          "age": 200
+        },
+        "valid": false,
+        "tags": ["validation-error", "range"]
+      },
+      {
+        "description": "invalid type for name",
+        "data": {
+          "name": 123,
+          "email": "test@example.com",
+          "age": 20
+        },
+        "valid": false,
+        "tags": ["validation-error", "type"]
+      },
+      {
+        "description": "invalid type for age",
+        "data": {
+          "name": "Test User",
+          "email": "test@example.com",
+          "age": "thirty"
+        },
+        "valid": false,
+        "tags": ["validation-error", "type"]
+      },
+      {
+        "description": "invalid type for active",
+        "data": {
+          "name": "Test User",
+          "email": "test@example.com",
+          "age": 30,
+          "active": "yes"
+        },
+        "valid": false,
+        "tags": ["validation-error", "type"]
+      }
+    ]
+  }
+]
